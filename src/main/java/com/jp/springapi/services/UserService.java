@@ -35,9 +35,14 @@ public class UserService {
         return userRepository.save(modelMapper.map(userDTO, User.class));
     }
 
+    public User updateUser(UserDTO userDTO){
+        findByEmail(userDTO);
+        return userRepository.save(modelMapper.map(userDTO, User.class));
+    }
+
     private void findByEmail(UserDTO userDTO){
         Optional<User> user = userRepository.findByEmail(userDTO.getEmail());
-        if(user.isPresent()){
+        if(user.isPresent() && !user.get().getId().equals(userDTO.getId())){
             throw new DataIntegratyViolationException("E-mail Já Cadastrado no Sistema");
         }
     }
