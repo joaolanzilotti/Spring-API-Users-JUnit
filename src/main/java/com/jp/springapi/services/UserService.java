@@ -3,6 +3,7 @@ package com.jp.springapi.services;
 import com.jp.springapi.dto.UserDTO;
 import com.jp.springapi.entities.User;
 import com.jp.springapi.repositories.UserRepository;
+import com.jp.springapi.services.exceptions.DataIntegratyViolationException;
 import com.jp.springapi.services.exceptions.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,15 @@ public class UserService {
     }
 
     public User addUser(UserDTO userDTO){
+        findByEmail(userDTO);
         return userRepository.save(modelMapper.map(userDTO, User.class));
+    }
+
+    private void findByEmail(UserDTO userDTO){
+        Optional<User> user = userRepository.findByEmail(userDTO.getEmail());
+        if(user.isPresent()){
+            throw new DataIntegratyViolationException("E-mail Já Cadastrado no Sistema");
+        }
     }
 
 }
