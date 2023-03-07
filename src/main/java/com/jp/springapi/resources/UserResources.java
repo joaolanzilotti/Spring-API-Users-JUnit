@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value =  "/user")
@@ -26,14 +27,18 @@ public class UserResources {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> findALlUsers(){
-        List<User> listAllUsers = userService.listAllUsers();
-        return ResponseEntity.ok().body(listAllUsers);
+    public ResponseEntity<List<UserDTO>> findAllUsers(){
+        //Com o Stream Estou Pegando Cada Elemento da Lista User e com o ModelMapper eu Mapeio Cada Elemento da lista x para um elemento da Classe UserDTO e retorno uma Lista
+        List<UserDTO> listAllUsersDTO = userService.findAllUsers()
+                .stream()
+                .map(x -> modelMapper.map(x, UserDTO.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(listAllUsersDTO);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDTO> findByIdUser(@PathVariable Long id){
-        return ResponseEntity.ok().body(modelMapper.map(userService.listUserById(id), UserDTO.class));
+        return ResponseEntity.ok().body(modelMapper.map(userService.findUserById(id), UserDTO.class));
     }
 
 }

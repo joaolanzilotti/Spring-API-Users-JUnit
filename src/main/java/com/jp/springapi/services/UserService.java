@@ -15,13 +15,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> listAllUsers(){
+    public List<User> findAllUsers(){
 
         return userRepository.findAll();
 
     }
 
-    public User listUserById(Long id){
+    public User findUserById(Long id){
 
         Optional<User> userById = userRepository.findById(id);
 
