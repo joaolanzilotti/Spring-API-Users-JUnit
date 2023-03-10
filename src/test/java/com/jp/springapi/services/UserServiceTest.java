@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,7 +53,25 @@ class UserServiceTest {
     }
 
     @Test
-    void findAllUsers() {
+    void whenFindAllThenReturnAnListOfUsers() {
+        //Estou mockando o userRepository e retornando uma Lista de users
+        Mockito.when(userRepository.findAll()).thenReturn(List.of(user));
+        List<User> response = userService.findAllUsers();
+
+        //Não pode ser Nulo
+        Assertions.assertNotNull(response);
+        //O tamanho da lista tem que ser 1
+        Assertions.assertEquals(1, response.size());
+        //O objeto que vai vir dentro dessa lista tem que ser do tipo User
+        Assertions.assertEquals(User.class, response.get(0).getClass());
+
+        Assertions.assertEquals(ID, response.get(0).getId());
+        Assertions.assertEquals(NAME, response.get(0).getNome());
+        Assertions.assertEquals(EMAIL, response.get(0).getEmail());
+        Assertions.assertEquals(PASSWORD, response.get(0).getPassword());
+
+
+
     }
 
     @Test
