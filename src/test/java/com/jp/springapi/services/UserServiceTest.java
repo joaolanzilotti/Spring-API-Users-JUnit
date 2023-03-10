@@ -3,6 +3,7 @@ package com.jp.springapi.services;
 import com.jp.springapi.dto.UserDTO;
 import com.jp.springapi.entities.User;
 import com.jp.springapi.repositories.UserRepository;
+import com.jp.springapi.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,15 +69,28 @@ class UserServiceTest {
 
         //O Assertions faz a comparação de duas classes e veririca se ela é igual
         Assertions.assertEquals(User.class, response.getClass());
-
         //Estou Comparando se o ID esperado vai ser o mesmo ID pegado do banco!
         Assertions.assertEquals(ID, response.getId());
-
         //Estou Comparando se o Nome esperado vai ser o mesmo ID pegado do banco!
         Assertions.assertEquals(NAME, response.getNome());
-
         //Estou Comparando se o Email esperado vai ser o mesmo ID pegado do banco!
         Assertions.assertEquals(EMAIL, response.getEmail());
+    }
+
+    //Toda vez que o metodo for executado e não encontrar um usuário, ele vai retornar uma Exception.
+    @Test
+    void findUserByIdReturnObjectNotFoundException(){
+        //Quando chamar o metodo findById estoure uma Exception do Tipo ObjectNotFoundException com essa mensagem.
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenThrow(new ObjectNotFoundException("Usuário Não Encontrado"));
+
+        try{
+        userService.findUserById(ID);
+        }catch (Exception ex){
+            //Estou Comparando minha Exception ObjectNotFound com o erro da Exception, se for o mesma Exception vai passar no teste.
+            Assertions.assertEquals(ObjectNotFoundException.class, ex.getClass());
+            //Estou comparando se as mensagens são iguais! , se forem iguais significa que é integro!
+            Assertions.assertEquals("Usuário Não Encontrado", ex.getMessage());
+        }
     }
 
     @Test
