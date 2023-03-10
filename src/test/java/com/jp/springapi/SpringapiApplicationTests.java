@@ -6,8 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class SpringapiApplicationTests {
 
+    //Testando a Classe Principal
     @Test
-    void contextLoads() {
+    void main() {
+        SpringapiApplication.main(new String[]{});
     }
 
 }
