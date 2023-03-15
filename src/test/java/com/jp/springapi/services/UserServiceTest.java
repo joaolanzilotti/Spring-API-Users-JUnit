@@ -181,6 +181,26 @@ class UserServiceTest {
     }
 
     @Test
+    void whenUpdateThenReturnAnDataIntegratyViolationException() {
+
+        //Estou Usando o Mockito para Quando o userRepository procurar um email ele vai procurar (simula) uma String e vai retornar um optionalUser
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
+
+        try{
+            //tive que setar um ID no optionalUser porque ele procurou só o email!
+            optionalUser.get().setId(2L);
+            //Tento Adicionar um Usuário UserDTO
+            userService.addUser(userDTO);
+        }catch(Exception ex){
+            //Se der Algum Erro ele aciona essas comparações
+            //Compara se os Erros São Iguais
+            Assertions.assertEquals(DataIntegratyViolationException.class, ex.getClass());
+            //Compara se a mensagem do Erro é igual a mensagem da Exception
+            Assertions.assertEquals("E-mail Já Cadastrado no Sistema", ex.getMessage());
+        }
+    }
+
+    @Test
     void deleteUser() {
     }
 
