@@ -116,15 +116,23 @@ class UserServiceTest {
     @Test
     void whenCreateThenReturnSucess() {
 
+        //Estou usando o Mockito para simular um Save do Repositorio, Usei o Mockito.any() para simular um usuário e usei o thenReturn(user) para retornar a simulação do tipo User
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
 
+        //A Classe User vai receber um Novo UserDTO
         User response = userService.addUser(userDTO);
 
+        //Estou Garantindo que o User não vai vir nulo!
         Assertions.assertNotNull(response);
+        //Estou Comparando a classe User com a response que recebe o userDTO
         Assertions.assertEquals(User.class, response.getClass());
+        //Estou Comparando o ID da classe User
         Assertions.assertEquals(ID, response.getId());
+        //Estou comparando o Nome da classe User
         Assertions.assertEquals(NAME, response.getNome());
+        //Estou comparando o Email da classe User
         Assertions.assertEquals(EMAIL, response.getEmail());
+        //Estou comparando a Senha da classe User
         Assertions.assertEquals(PASSWORD, response.getPassword());
 
     }
@@ -132,13 +140,19 @@ class UserServiceTest {
     @Test
     void whenCreateThenReturnAnDataIntegratyViolationException() {
 
+        //Estou Usando o Mockito para Quando o userRepository procurar um email ele vai procurar (simula) uma String e vai retornar um optionalUser
         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
 
         try{
+            //tive que setar um ID no optionalUser porque ele procurou só o email!
             optionalUser.get().setId(2L);
+            //Tento Adicionar um Usuário UserDTO
             userService.addUser(userDTO);
         }catch(Exception ex){
+            //Se der Algum Erro ele aciona essas comparações
+            //Compara se os Erros São Iguais
             Assertions.assertEquals(DataIntegratyViolationException.class, ex.getClass());
+            //Compara se a mensagem do Erro é igual a mensagem da Exception
             Assertions.assertEquals("E-mail Já Cadastrado no Sistema", ex.getMessage());
         }
     }
