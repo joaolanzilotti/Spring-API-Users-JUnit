@@ -201,7 +201,16 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteUser() {
+    void deleteUserWithSucess() {
+
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(optionalUser);
+
+        //doNothing() - Não Faca nada - when() - Quando Deletar um Usuário
+        Mockito.doNothing().when(userRepository).deleteById(Mockito.anyLong());
+        userService.deleteUser(ID);
+        //Mockito.verify() - Verifica quantas vezes o repositorio foi chamado.
+        Mockito.verify(userRepository, Mockito.times(1)).deleteById(Mockito.anyLong());
+
     }
 
     private void startUser(){
