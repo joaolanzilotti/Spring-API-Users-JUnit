@@ -158,7 +158,26 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUser() {
+    void whenSucessThenReturnSucess() {
+
+        //Estou usando o Mockito para simular um Save do Repositorio, Usei o Mockito.any() para simular um usuário e usei o thenReturn(user) para retornar a simulação do tipo User
+        Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
+
+        //A Classe User vai receber um Novo UserDTO
+        User response = userService.updateUser(userDTO);
+
+        //Estou Garantindo que o User não vai vir nulo!
+        Assertions.assertNotNull(response);
+        //Estou Comparando a classe User com a response que recebe o userDTO
+        Assertions.assertEquals(User.class, response.getClass());
+        //Estou Comparando o ID da classe User
+        Assertions.assertEquals(ID, response.getId());
+        //Estou comparando o Nome da classe User
+        Assertions.assertEquals(NAME, response.getNome());
+        //Estou comparando o Email da classe User
+        Assertions.assertEquals(EMAIL, response.getEmail());
+        //Estou comparando a Senha da classe User
+        Assertions.assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
